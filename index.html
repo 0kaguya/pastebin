@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pastebin</title>
+    <style>
+      .container {
+	  width: 80%;
+	  margin: 20px auto;
+      }
+      textarea {
+	  width: 100%;
+	  height: 50vh;
+	  margin-bottom: 10px;
+      }
+      #url-box {
+	  visibility: unset;
+	  color: grey;
+	  margin-top: 10px;
+	  padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <textarea id="content" placeholder="Paste here..."></textarea>
+      <button onclick="sendText()">Submit</button>
+      <label id="url-box"></label>
+    </div>
+
+    <script>
+      async function sendText() {
+	  const response = await fetch('/', {
+	      method: 'POST',
+	      body: document.getElementById('content').value
+	  });
+	  const out = document.getElementById('url-box');
+	  out.textContent =
+	      new URL(await response.text(), window.location.origin).href;
+	  out.style.visibility = 'unset';
+      }
+      document.getElementById('url-box').onclick = function() {
+	  navigator.clipboard.writeText(this.textContent);
+	  this.style.background = '#e0ffe0';
+	  setTimeout(() => this.style.background = 'unset', 200);
+      };
+    </script>
+  </body>
+</html>
